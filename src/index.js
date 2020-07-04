@@ -1,6 +1,8 @@
 const express = require('express');
 const client = require('./config/client');
 
+const { convert } = require('./helpers');
+
 const app = express();
 
 app.use(express.json());
@@ -8,14 +10,23 @@ app.use(express.json());
 app.post('/', (req, res) => {
 	const { hostname, title } = req.body;
 
-	if (hostname === 'www.youtube.com') {
-		client.updatePresence({
-			largeImageKey: 'youtube',
-			largeImageText: 'YouTube',
-			details: 'Looking',
-			state: title
-		});
+	let presence = {
+		details: hostname,
+		largeImageKey: 'chrome',
+		largeImageText: 'Google Chrome',
+		state: title
+	};
+
+	switch (hostname) {
+		case 'www.youtube.com':
+			presence = convert('YouTube', 'youtube', 'Watching', presence);
+			break;
+		case 'github.com':
+			presence = convert('GitHub', 'github', 'Reading Code', presence);
+			break;
 	}
+
+	client.updatePresence(presence);
 
 	res.json({ message: 'success' });
 });
