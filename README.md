@@ -1,7 +1,5 @@
 # Discord Chrome Presence
 
-> in this time only works youtube
-
 ## Install
 
 ### Project
